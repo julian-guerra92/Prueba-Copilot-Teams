@@ -140,7 +140,7 @@ export class OpenAIHelper {
                 messages,
                 functions: this.FUNCTIONS,
                 max_tokens: 512,
-                temperature: 0,
+                temperature: 0.5,
                 top_p: 1
             });
 

@@ -43,6 +43,7 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
             console.log(functionArguments);
             functionResult = await GraphHelper.sendEmail(functionArguments.to, functionArguments.subject, functionArguments.body);
         } else if (functionName === "getContactByName") {
+            console.log(functionArguments);
             functionResult = await GraphHelper.getContactByName(functionArguments.name);
         }
 
