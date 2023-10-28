@@ -92,6 +92,22 @@ export class OpenAIHelper {
             }
         },
         {
+            "name": "getContactByName",
+            "description": "Get the details of a contact by name",
+            "parameters": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the contact"
+                    }
+                }
+            }
+        },
+        {
             "name": "showFunnyMessage",
             "description": "If user's query is not related to work based personal assistance then show a funny message",
             "parameters": {

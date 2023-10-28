@@ -22,7 +22,16 @@ export const commandBot = new ConversationBot({
   // See https://docs.microsoft.com/microsoftteams/platform/toolkit/teamsfx-sdk to learn more about ssoConfig
   ssoConfig: {
     aad: {
-      scopes: ["User.Read", "Calendars.Read", "Tasks.Read", "Mail.Read", "Mail.Send","Files.Read"],
+      scopes: [
+        "User.Read",
+        "Calendars.Read",
+        "Tasks.Read",
+        "Mail.Read",
+        "Mail.Send",
+        "Files.Read",
+        "People.Read",
+        "People.Read.All"
+      ],
       initiateLoginEndpoint: `https://${config.botDomain}/auth-start.html`,
       authorityHost: config.authorityHost,
       clientId: config.clientId,

@@ -42,6 +42,8 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
         } else if (functionName === "sendEmail") {
             console.log(functionArguments);
             functionResult = await GraphHelper.sendEmail(functionArguments.to, functionArguments.subject, functionArguments.body);
+        } else if (functionName === "getContactByName") {
+            functionResult = await GraphHelper.getContactByName(functionArguments.name);
         }
 
         return functionResult;
@@ -74,7 +76,8 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
                         case "getMyDetails":
                         case "getMyEvents":
                         case "getMyDriveDocuments":
-                        case "sendEmail":    
+                        case "sendEmail":
+                        case "getContactByName":
                         case "getMyTasks": {
                             const functionResult = await this.callFunction(function_name, function_arguments_json);
                             console.log("functionREsult: " + functionResult);
@@ -115,7 +118,16 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
         // Init OnBehalfOfUserCredential instance with SSO token
         const oboCredential = new OnBehalfOfUserCredential(tokenResponse.ssoToken, oboAuthConfig);
         // Add scope for your Azure AD app. For example: Mail.Read, etc.
-        const graphClient = createMicrosoftGraphClientWithCredential(oboCredential, ["User.Read", "Calendars.Read", "Tasks.Read", "Mail.Read", "Mail.Send", "Files.Read"]);
+        const graphClient = createMicrosoftGraphClientWithCredential(oboCredential, [
+            "User.Read",
+            "Calendars.Read",
+            "Tasks.Read",
+            "Mail.Read",
+            "Mail.Send",
+            "Files.Read",
+            "People.Read",
+            "People.Read.All"
+        ]);
 
         GraphHelper.setGraphClient(graphClient);
 

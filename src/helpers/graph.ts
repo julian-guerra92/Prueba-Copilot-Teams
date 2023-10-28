@@ -105,4 +105,16 @@ export class GraphHelper {
         }
     }
 
+    //https://learn.microsoft.com/en-us/graph/api/user-list-people?view=graph-rest-1.0&tabs=http#code-try-1
+    static async getContactByName(name: string) {
+        const contacts = await this.graphClient.api("/me/contacts").filter(`startswith(displayName,'${name}')`).get();
+        console.log(contacts);
+
+        if (contacts) {
+            return contacts;
+        } else {
+            return null;
+        }
+    }
+
 }
