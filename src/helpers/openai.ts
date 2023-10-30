@@ -41,19 +41,116 @@ export class OpenAIHelper {
             }
         },
         {
-            "name": "getMyTasks",
-            "description": "Get the tasks from the Microsoft planner of the current user",
+            "name": "createCalendarEvent",
+            "description": "Create an event in a calendar of the current user",
+            "parameters": {
+                "type": "object",
+                "required": [
+                    "subject",
+                    "attendees",
+                    "startDateTime",
+                    "endDateTime",
+                    "location"
+                ],
+                "properties": {
+                    "subject": {
+                        "type": "string",
+                        "description": "Subject of the event"
+                    },
+                    "attendees": {
+                        "type": "array",
+                        "description": "Attendees of the event. Each attendee is an object with emailAddress and type properties. emailAddress is an object with address and name properties. type is a string.",
+                    },
+                    "startDateTime": {
+                        "type": "string",
+                        "description": "Start date and time of the event"
+                    },
+                    "endDateTime": {
+                        "type": "string",
+                        "description": "End date and time of the event"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "Location of the event"
+                    }
+                }
+            }
+        },
+        {
+            "name": "getMyTodoTaskList",
+            "description": "Get the todo task lists from the Microsoft todo of the current user",
             "parameters": {
                 "type": "object",
                 "properties": {
+                }
+            }
+        },
+        {
+            "name": "createTodoTaskList",
+            "description": "Create a todo task list in the Microsoft todo of the current user",
+            "parameters": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the todo task list"
+                    }
+                }
+            }
+        },
+        {
+            "name": "getMyTodoTasks",
+            "description": "Get the todo tasks from the Microsoft todo of the current user",
+            "parameters": {
+                "type": "object",
+                "required": [
+                    "getIncompleteTasksOnly",
+                    "idTodoList"
+                ],
+                "properties": {
                     "getIncompleteTasksOnly": {
                         "type": "boolean",
-                        "description": "Get incomplete only"
+                        "description": "Get incomplete tasks only"
+                    },
+                    "idTodoList": {
+                        "type": "string",
+                        "description": "Id of the todo task list"
                     }
-                },
+                }
+            }
+        },
+        {
+            "name": "createTask",
+            "description": "Create a task in the Microsoft todo of the current user",
+            "parameters": {
+                "type": "object",
                 "required": [
-                    "getIncompleteTasksOnly"
-                ]
+                    "title",
+                    "startDateTime",
+                    "dueDateTime",
+                    "idTodoList"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Title of the task"
+                    },
+                    "startDateTime": {
+                        "type": "string",
+                        "description": "Start date and time of the task"
+                    },
+                    "dueDateTime": {
+                        "type": "string",
+                        "description": "Due date and time of the task"
+                    },
+                    "idTodoList": {
+                        "type": "string",
+                        "description": "Id of the todo task list"
+                    }
+                }
             }
         },
         {

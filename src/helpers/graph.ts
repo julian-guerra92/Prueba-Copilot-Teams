@@ -1,4 +1,5 @@
 import { ResponseType } from "@microsoft/microsoft-graph-client";
+import { ContactEventCalendar } from "../models/contactEventCalendar";
 
 export class GraphHelper {
     static graphClient: any;
@@ -52,13 +53,75 @@ export class GraphHelper {
         }
     }
 
-    static async getMyTasks(getIncompleteTasksOnly: boolean) {
-        const userTasks = await this.graphClient.api("/me/planner/tasks").select(["title", "startDateTime", "dueDateTime", "percentComplete"]).get();
-        if (userTasks) {
-            if (getIncompleteTasksOnly) {
-                return userTasks.value.filter((task: any) => task.percentComplete !== 100);
+    static async createCalendarEvent(subject: string, attendees: ContactEventCalendar[], startDateTime: string, endDateTime: string, location: string) {
+        const event = {
+            subject: subject,
+            attendees: attendees,
+            start: {
+                dateTime: startDateTime,
+                timeZone: "UTC"
+            },
+            end: {
+                dateTime: endDateTime,
+                timeZone: "UTC"
+            },
+            location: {
+                displayName: location
             }
-            return userTasks;
+        };
+
+        const result = await this.graphClient.api("/me/events").post({ event: event });
+        if (result) {
+            return "Event created successfully";
+        } else {
+            return null;
+        }
+    }
+
+    static async getMyTodoTaskList() {
+        const userTodoTaskLists = await this.graphClient.api("/me/todo/lists").get();
+        if (userTodoTaskLists) {
+            return userTodoTaskLists;
+        } else {
+            return null;
+        }
+    }
+
+    static async createTodoTaskList(name: string) {
+        const todoTaskList = {
+            displayName: name
+        };
+        const result = await this.graphClient.api("/me/todo/lists").post({ todoTaskList: todoTaskList });
+        if (result) {
+            return "Todo task list created successfully";
+        } else {
+            return null;
+        }
+    }
+
+    static async getMyTodoTasks(getIncompleteTasksOnly: boolean, idTodoList: string) {
+        const userTodoTasks = await this.graphClient.api(`/me/todo/${idTodoList}/tasks`).get();
+        if (userTodoTasks) {
+            if (getIncompleteTasksOnly) {
+                return userTodoTasks.value.filter((task: any) => {
+                    return task.status !== "completed";
+                });
+            }
+            return userTodoTasks;
+        } else {
+            return null;
+        }
+    }
+
+    static async createTodoTask(title: string, startDateTime: string, dueDateTime: string, idTodoList: string) {
+        const task = {
+            title: title,
+            startDateTime: startDateTime,
+            dueDateTime: dueDateTime
+        };
+        const result = await this.graphClient.api(`/me/todo/${idTodoList}/tasks`).post({ task: task });
+        if (result) {
+            return "Task created successfully";
         } else {
             return null;
         }
@@ -105,7 +168,6 @@ export class GraphHelper {
         }
     }
 
-    //https://learn.microsoft.com/en-us/graph/api/user-list-people?view=graph-rest-1.0&tabs=http#code-try-1
     static async getContactByName(name: string) {
         const contacts = await this.graphClient.api("/me/people").search(name).get();
         console.log(contacts);

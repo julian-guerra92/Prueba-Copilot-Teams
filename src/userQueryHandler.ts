@@ -33,16 +33,53 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
                 this.showMyDetailsAsCard = true;
                 this.pictureUrl = await GraphHelper.getMyPhoto();
             }
-        } else if (functionName === "getMyEvents") {
+        }
+
+        if (functionName === "getMyEvents") {
             functionResult = await GraphHelper.getMyEvents(functionArguments.getFutureEventsOnly);
-        } else if (functionName === "getMyTasks") {
-            functionResult = await GraphHelper.getMyTasks(functionArguments.getIncompleteTasksOnly);
-        } else if (functionName === "getMyDriveDocuments") {
+        }
+
+        if (functionName === "createCalendarEvent") {
+            functionResult = await GraphHelper.createCalendarEvent(
+                functionArguments.subject,
+                functionArguments.attendees,
+                functionArguments.startDateTime,
+                functionArguments.endDateTime,
+                functionArguments.location
+            );
+        }
+
+        if (functionName === "getMyTodoTaskList") {
+            functionResult = await GraphHelper.getMyTodoTaskList();
+        }
+
+        if (functionName === "createTodoTaskList") {
+            functionResult = await GraphHelper.createTodoTaskList(functionArguments.displayName);
+        }
+
+        if (functionName === "getMyTodoTasks") {
+            functionResult = await GraphHelper.getMyTodoTasks(functionArguments.taskListId, functionArguments.getCompletedTasksOnly);
+        }
+
+        if (functionName === "createTodoTask") {
+            functionResult = await GraphHelper.createTodoTask(
+                functionArguments.taskListId,
+                functionArguments.title,
+                functionArguments.startDate,
+                functionArguments.dueDate
+            );
+        }
+
+        if (functionName === "getMyDriveDocuments") {
             functionResult = await GraphHelper.getMyDriveDocuments();
-        } else if (functionName === "sendEmail") {
+        }
+
+        if (functionName === "sendEmail") {
             console.log(functionArguments);
             functionResult = await GraphHelper.sendEmail(functionArguments.to, functionArguments.subject, functionArguments.body);
-        } else if (functionName === "getContactByName") {
+        }
+
+        if (functionName === "getContactByName") {
             console.log(functionArguments);
             functionResult = await GraphHelper.getContactByName(functionArguments.name);
         }
@@ -76,10 +113,14 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
                     switch (function_name) {
                         case "getMyDetails":
                         case "getMyEvents":
+                        case "createCalendarEvent":
+                        case "getMyTodoTaskList":
+                        case "createTodoTaskList":
+                        case "getMyTodoTasks":
+                        case "createTodoTask":
                         case "getMyDriveDocuments":
                         case "sendEmail":
-                        case "getContactByName":
-                        case "getMyTasks": {
+                        case "getContactByName": {
                             const functionResult = await this.callFunction(function_name, function_arguments_json);
                             console.log("functionREsult: " + functionResult);
                             const assistantMessage = OpenAIHelper.getAssistantMessage(function_name, function_arguments_json);
@@ -122,12 +163,15 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
         const graphClient = createMicrosoftGraphClientWithCredential(oboCredential, [
             "User.Read",
             "Calendars.Read",
+            "Calendars.ReadWrite",
             "Tasks.Read",
+            "Tasks.ReadWrite",
+            "Tasks.ReadWrite.All",
             "Mail.Read",
             "Mail.Send",
             "Files.Read",
             "People.Read",
-            "People.Read.All"
+            "People.Read.All",
         ]);
 
         GraphHelper.setGraphClient(graphClient);

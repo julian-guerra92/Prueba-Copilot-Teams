@@ -25,12 +25,15 @@ export const commandBot = new ConversationBot({
       scopes: [
         "User.Read",
         "Calendars.Read",
+        "Calendars.ReadWrite",
         "Tasks.Read",
+        "Tasks.ReadWrite",
+        "Tasks.ReadWrite.All",
         "Mail.Read",
         "Mail.Send",
         "Files.Read",
         "People.Read",
-        "People.Read.All"
+        "People.Read.All",
       ],
       initiateLoginEndpoint: `https://${config.botDomain}/auth-start.html`,
       authorityHost: config.authorityHost,
