@@ -24,6 +24,9 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
 
 
     async callFunction(functionName: string, functionArguments: any) {
+
+        console.log('funciontName: ' + functionName);
+
         let functionResult = null;
 
         if (functionName === "getMyDetails") {
@@ -57,8 +60,8 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
             functionResult = await GraphHelper.createTodoTaskList(functionArguments.displayName);
         }
 
-        if (functionName === "getMyTodoTasks") {
-            functionResult = await GraphHelper.getMyTodoTasks(functionArguments.taskListId, functionArguments.getCompletedTasksOnly);
+        if (functionName === "getTodoTasks") {
+            functionResult = await GraphHelper.getTodoTasks(functionArguments.getTasksByStatus, functionArguments.idTodoList);
         }
 
         if (functionName === "createTodoTask") {
@@ -145,7 +148,7 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
             }
 
         } catch (error) {
-            console.error(error);
+            console.error('Error userQueryHalder: ' + error);
             return OpenAIHelper.TRY_LATER_MESSAGE;
         }
     }
@@ -166,7 +169,6 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
             "Calendars.ReadWrite",
             "Tasks.Read",
             "Tasks.ReadWrite",
-            "Tasks.ReadWrite.All",
             "Mail.Read",
             "Mail.Send",
             "Files.Read",

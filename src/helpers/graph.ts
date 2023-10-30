@@ -39,6 +39,7 @@ export class GraphHelper {
     }
 
     static async getMyEvents(futureEventsOnly: boolean) {
+        console.log(futureEventsOnly);
         const userEvents = await this.graphClient.api("/me/events").select(["subject", "start", "end", "attendees", "location"]).get();
 
         if (userEvents) {
@@ -53,24 +54,26 @@ export class GraphHelper {
         }
     }
 
-    static async createCalendarEvent(subject: string, attendees: ContactEventCalendar[], startDateTime: string, endDateTime: string, location: string) {
+    static async createCalendarEvent(subject: string, attendees: ContactEventCalendar[], startDateTime: Date, endDateTime: Date, location: string) {
         const event = {
             subject: subject,
             attendees: attendees,
             start: {
                 dateTime: startDateTime,
-                timeZone: "UTC"
+                timeZone: "Pacific Standard Time"
             },
             end: {
                 dateTime: endDateTime,
-                timeZone: "UTC"
+                timeZone: "Pacific Standard Time"
             },
             location: {
                 displayName: location
             }
         };
 
-        const result = await this.graphClient.api("/me/events").post({ event: event });
+        console.log(event);
+
+        const result = await this.graphClient.api("/me/events").post(event);
         if (result) {
             return "Event created successfully";
         } else {
@@ -80,6 +83,7 @@ export class GraphHelper {
 
     static async getMyTodoTaskList() {
         const userTodoTaskLists = await this.graphClient.api("/me/todo/lists").get();
+
         if (userTodoTaskLists) {
             return userTodoTaskLists;
         } else {
@@ -87,11 +91,11 @@ export class GraphHelper {
         }
     }
 
-    static async createTodoTaskList(name: string) {
+    static async createTodoTaskList(displayName: string) {
         const todoTaskList = {
-            displayName: name
+            displayName
         };
-        const result = await this.graphClient.api("/me/todo/lists").post({ todoTaskList: todoTaskList });
+        const result = await this.graphClient.api("/me/todo/lists").post(todoTaskList);
         if (result) {
             return "Todo task list created successfully";
         } else {
@@ -99,10 +103,12 @@ export class GraphHelper {
         }
     }
 
-    static async getMyTodoTasks(getIncompleteTasksOnly: boolean, idTodoList: string) {
-        const userTodoTasks = await this.graphClient.api(`/me/todo/${idTodoList}/tasks`).get();
+    //TODO: Aquí quedé
+    static async getTodoTasks(getTasksByStatus: string, idTodoList: string) {
+        console.log(idTodoList);
+        const userTodoTasks = await this.graphClient.api(`/me/todo/lists/${idTodoList}/tasks`).get();
         if (userTodoTasks) {
-            if (getIncompleteTasksOnly) {
+            if (getTasksByStatus !== "completed") {
                 return userTodoTasks.value.filter((task: any) => {
                     return task.status !== "completed";
                 });
@@ -114,12 +120,14 @@ export class GraphHelper {
     }
 
     static async createTodoTask(title: string, startDateTime: string, dueDateTime: string, idTodoList: string) {
+        console.log(idTodoList);
+        const id = 'AAMkADBlMjA4OTlmLTE1ZTUtNGQ1Zi1iYTQxLTU5NDg4ZjQ5OWE2MwAuAAAAAAAUykQyf1EGTLMVDiORow6AAQCSYLBYpbM5QrhTrMgcNG7aAAAEnsRbAAA=';
         const task = {
             title: title,
             startDateTime: startDateTime,
             dueDateTime: dueDateTime
         };
-        const result = await this.graphClient.api(`/me/todo/${idTodoList}/tasks`).post({ task: task });
+        const result = await this.graphClient.api(`/me/todo/${id}/tasks`).post({ task: task });
         if (result) {
             return "Task created successfully";
         } else {

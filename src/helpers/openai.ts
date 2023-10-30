@@ -26,7 +26,7 @@ export class OpenAIHelper {
         },
         {
             "name": "getMyEvents",
-            "description": "Get the events in a calendar of the current user",
+            "description": "Get the events in a calendar of the current user. Show information in a ordered list.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -42,7 +42,7 @@ export class OpenAIHelper {
         },
         {
             "name": "createCalendarEvent",
-            "description": "Create an event in a calendar of the current user",
+            "description": "Create an event in a calendar of the current user. Required contact information. For that use function getContactByName. Build object attendees with the result of getContactByName function and use the next format: attendees: [{ emailAddress: { address: 'emailAddress', name: 'name' }, type: 'required' }]",
             "parameters": {
                 "type": "object",
                 "required": [
@@ -58,16 +58,16 @@ export class OpenAIHelper {
                         "description": "Subject of the event"
                     },
                     "attendees": {
-                        "type": "array",
-                        "description": "Attendees of the event. Each attendee is an object with emailAddress and type properties. emailAddress is an object with address and name properties. type is a string.",
+                        "type": "object",
+                        "description": "Attendees of the event. Each attendee is an object with emailAddress and type properties. emailAddress is an object with address and name properties. type is a string. Use function getContactByName to get the emailAddress of a contact.",
                     },
                     "startDateTime": {
                         "type": "string",
-                        "description": "Start date and time of the event"
+                        "description": "Start date and time of the event. Take information from user's query and convert it to a date and time. Format: YYYY-MM-DDTHH:MM:SS"
                     },
                     "endDateTime": {
                         "type": "string",
-                        "description": "End date and time of the event"
+                        "description": "Start date and time of the event. Take information from user's query and convert it to a date and time. Format: YYYY-MM-DDTHH:MM:SS"
                     },
                     "location": {
                         "type": "string",
@@ -91,33 +91,33 @@ export class OpenAIHelper {
             "parameters": {
                 "type": "object",
                 "required": [
-                    "name"
+                    "displayName"
                 ],
                 "properties": {
-                    "name": {
+                    "displayName": {
                         "type": "string",
-                        "description": "Name of the todo task list"
+                        "description": "Name of the todo task list. Send the name with the first word capitalized."
                     }
                 }
             }
         },
         {
-            "name": "getMyTodoTasks",
-            "description": "Get the todo tasks from the Microsoft todo of the current user",
+            "name": "getTodoTasks",
+            "description": "Get todo tasks from the Microsoft todo of the current user, from a specific todo task list. Required id of the todo task list. For that use function getMyTodoTaskList and found the id of the todo task list in array of objects of the key value.",
             "parameters": {
                 "type": "object",
                 "required": [
-                    "getIncompleteTasksOnly",
+                    "getTasksByStatus",
                     "idTodoList"
                 ],
                 "properties": {
-                    "getIncompleteTasksOnly": {
-                        "type": "boolean",
-                        "description": "Get incomplete tasks only"
+                    "getTasksByStatus": {
+                        "type": "string",
+                        "description": "Identify if the query is to get incomplete tasks or complete tasks"
                     },
                     "idTodoList": {
                         "type": "string",
-                        "description": "Id of the todo task list"
+                        "description": "Id of the todo task list. Get this id from the result of the function getMyTodoTaskList."
                     }
                 }
             }
@@ -244,7 +244,7 @@ export class OpenAIHelper {
             return response.data;
 
         } catch (error) {
-            console.error("error: " + error);
+            console.error("Error initialize: " + error);
             return null;
         }
     }

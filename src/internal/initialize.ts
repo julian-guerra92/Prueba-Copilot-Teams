@@ -28,7 +28,6 @@ export const commandBot = new ConversationBot({
         "Calendars.ReadWrite",
         "Tasks.Read",
         "Tasks.ReadWrite",
-        "Tasks.ReadWrite.All",
         "Mail.Read",
         "Mail.Send",
         "Files.Read",
