@@ -60,16 +60,14 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
             functionResult = await GraphHelper.createTodoTaskList(functionArguments.displayName);
         }
 
-        if (functionName === "getTodoTasks") {
-            functionResult = await GraphHelper.getTodoTasks(functionArguments.getTasksByStatus, functionArguments.idTodoList);
+        if (functionName === "getListTasks") {
+            functionResult = await GraphHelper.getListTasks(functionArguments.getTasksByStatus, functionArguments.idTodoList);
         }
 
         if (functionName === "createTodoTask") {
             functionResult = await GraphHelper.createTodoTask(
-                functionArguments.taskListId,
                 functionArguments.title,
-                functionArguments.startDate,
-                functionArguments.dueDate
+                functionArguments.idTodoList
             );
         }
 
@@ -119,13 +117,13 @@ export class UserQueryHandler implements TeamsFxBotSsoCommandHandler {
                         case "createCalendarEvent":
                         case "getMyTodoTaskList":
                         case "createTodoTaskList":
-                        case "getMyTodoTasks":
+                        case "getListTasks":
                         case "createTodoTask":
                         case "getMyDriveDocuments":
                         case "sendEmail":
                         case "getContactByName": {
                             const functionResult = await this.callFunction(function_name, function_arguments_json);
-                            console.log("functionREsult: " + functionResult);
+                            console.log("functionResult: " + functionResult);
                             const assistantMessage = OpenAIHelper.getAssistantMessage(function_name, function_arguments_json);
                             const functionMessage = OpenAIHelper.getFunctionMessage(function_name, functionResult);
                             messages.push(assistantMessage);

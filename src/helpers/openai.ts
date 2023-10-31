@@ -78,7 +78,7 @@ export class OpenAIHelper {
         },
         {
             "name": "getMyTodoTaskList",
-            "description": "Get the todo task lists from the Microsoft todo of the current user",
+            "description": "Get the todo task lists from the Microsoft Todo of the current user. If the user query needs to show the todo list tasks then use the function getListTasks. If the user query needs to create a todo task then use the function createTodoTask.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -87,7 +87,7 @@ export class OpenAIHelper {
         },
         {
             "name": "createTodoTaskList",
-            "description": "Create a todo task list in the Microsoft todo of the current user",
+            "description": "Create a todo task list in the Microsoft Todo of the current user. This function is only use for a list of tasks.",
             "parameters": {
                 "type": "object",
                 "required": [
@@ -102,8 +102,8 @@ export class OpenAIHelper {
             }
         },
         {
-            "name": "getTodoTasks",
-            "description": "Get todo tasks from the Microsoft todo of the current user, from a specific todo task list. Required id of the todo task list. For that use function getMyTodoTaskList and found the id of the todo task list in array of objects of the key value.",
+            "name": "getListTasks",
+            "description": "Get list of tasks completed or not completed from a todo task list of the Microsoft Todo of the current user. For that use function getMyTodoTaskList to get the id of the todo task list.",
             "parameters": {
                 "type": "object",
                 "required": [
@@ -117,38 +117,28 @@ export class OpenAIHelper {
                     },
                     "idTodoList": {
                         "type": "string",
-                        "description": "Id of the todo task list. Get this id from the result of the function getMyTodoTaskList."
+                        "description": "Id of the todo task list. Get this id from the result of the function getMyTodoTaskList in the array of the key called 'value'."
                     }
                 }
             }
         },
         {
-            "name": "createTask",
-            "description": "Create a task in the Microsoft todo of the current user",
+            "name": "createTodoTask",
+            "description": "Create a task for a task list in the Microsoft todo of the current user. For that, always use function getMyTodoTaskList to get the id of the todo task list.",
             "parameters": {
                 "type": "object",
                 "required": [
                     "title",
-                    "startDateTime",
-                    "dueDateTime",
                     "idTodoList"
                 ],
                 "properties": {
                     "title": {
                         "type": "string",
-                        "description": "Title of the task"
-                    },
-                    "startDateTime": {
-                        "type": "string",
-                        "description": "Start date and time of the task"
-                    },
-                    "dueDateTime": {
-                        "type": "string",
-                        "description": "Due date and time of the task"
+                        "description": "Title of the task. Send the name with the first word capitalized."
                     },
                     "idTodoList": {
                         "type": "string",
-                        "description": "Id of the todo task list"
+                        "description": "Id of the todo task list. Get this id from the result of the function getMyTodoTaskList in the array of the key called 'value'."
                     }
                 }
             }

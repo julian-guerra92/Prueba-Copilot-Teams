@@ -60,11 +60,11 @@ export class GraphHelper {
             attendees: attendees,
             start: {
                 dateTime: startDateTime,
-                timeZone: "Pacific Standard Time"
+                timeZone: "America/Bogota"
             },
             end: {
                 dateTime: endDateTime,
-                timeZone: "Pacific Standard Time"
+                timeZone: "America/Bogota"
             },
             location: {
                 displayName: location
@@ -103,8 +103,7 @@ export class GraphHelper {
         }
     }
 
-    //TODO: Aquí quedé
-    static async getTodoTasks(getTasksByStatus: string, idTodoList: string) {
+    static async getListTasks(getTasksByStatus: string, idTodoList: string) {
         console.log(idTodoList);
         const userTodoTasks = await this.graphClient.api(`/me/todo/lists/${idTodoList}/tasks`).get();
         if (userTodoTasks) {
@@ -119,15 +118,15 @@ export class GraphHelper {
         }
     }
 
-    static async createTodoTask(title: string, startDateTime: string, dueDateTime: string, idTodoList: string) {
+    static async createTodoTask(title: string, idTodoList: string) {
         console.log(idTodoList);
-        const id = 'AAMkADBlMjA4OTlmLTE1ZTUtNGQ1Zi1iYTQxLTU5NDg4ZjQ5OWE2MwAuAAAAAAAUykQyf1EGTLMVDiORow6AAQCSYLBYpbM5QrhTrMgcNG7aAAAEnsRbAAA=';
+        console.log(title);
         const task = {
             title: title,
-            startDateTime: startDateTime,
-            dueDateTime: dueDateTime
+            importance: "normal"
         };
-        const result = await this.graphClient.api(`/me/todo/${id}/tasks`).post({ task: task });
+        const result = await this.graphClient.api(`/me/todo/lists/${idTodoList}/tasks`).post(task);
+        console.log(result);
         if (result) {
             return "Task created successfully";
         } else {
