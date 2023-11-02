@@ -5,8 +5,11 @@ export class OpenAIHelper {
 
     private static configuration: Configuration;
     private static openai: OpenAIApi;
-    public static TRY_LATER_MESSAGE = "Sorry, I am unable to process your query at the moment. Please try again later.";
+
+    public static TRY_LATER_MESSAGE = "Lo siento, no puedo procesar tu consulta en este momento. Por favor, inténtelo de nuevo más tarde.";
+
     public static SYSTEM_MESSAGE = `You are a personal assistant. Your final reply must be in markdown format. Use ** for bold and * for italics and emojis where needed. For events and tasks note that today is ${new Date()}.`;
+    
     public static FUNCTIONS = [
         {
             "name": "getMyDetails",
@@ -154,7 +157,7 @@ export class OpenAIHelper {
         },
         {
             "name": "sendEmail",
-            "description": "Send an email to a recipient",
+            "description": "Send an email to a recipient. In the end of the message, add my name.",
             "parameters": {
                 "type": "object",
                 "required": [
